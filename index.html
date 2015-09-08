@@ -1,0 +1,90 @@
+<!doctype html>
+<html  ng-app>
+  <head>
+    <meta charset="utf8">
+    <title>My First Angular App</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container" role="main" ng-controller="AppController" style="margin-top: 5px">
+        <div class="dropdown col-md-3 col-md-offset-3">
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Sort By
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li>
+              <a ng-class="{active : sorting.by === 'name'}" ng-click="sortBy('name')">
+                <span ng-show="sorting.by === 'name'">
+                  <span ng-show="!sorting.desc" class="glyphicon glyphicon-chevron-up"></span>
+                  <span ng-show="sorting.desc" class="glyphicon glyphicon-chevron-down"></span>
+                </span>
+                Name
+              </a>
+            </li>
+            <li>
+              <a ng-class="{active : sorting.by === 'price'}" ng-click="sortBy('price')">
+                <span ng-show="sorting.by === 'price'">
+                  <span ng-show="!sorting.desc" class="glyphicon glyphicon-chevron-up"></span>
+                  <span ng-show="sorting.desc" class="glyphicon glyphicon-chevron-down"></span>
+                </span>
+                Price
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="row">
+          <div class="col-md-3 col-md-offset-3" style="position: absolute;">
+            <div class="input-group">
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search"></span>
+              </span>
+              <input type="text" class="form-control" ng-model="filtering">
+            </div>
+          </div>
+        </div>
+      <div ng-repeat="item in items | filter: {name:filtering} | orderBy:sorting.by:sorting.desc">
+        <div class="col-md-4 col-md-offset-4" style="border: 1px solid #ccc; margin-top: 5px">
+          <div class="thumbnail">
+            <button ng-hide="editMode" class="btn btn-default btn-link pull-right glyphicon glyphicon-edit" ng-click="editMode = !editMode"></button>
+            <button ng-show="editMode" class="btn btn-default btn-link pull-right glyphicon glyphicon-save" ng-click="editMode = !editMode"></button>
+            <img ng-src="{{item.imglink}}" height="300" width="300">
+            <span ng-repeat="tag in item.tags">
+              <label class="label label-primary">{{tag}}</label>
+            </span>
+          </div>
+          <div ng-hide="editMode">
+            <h3>{{item.name}}</h3>
+            <p ng-hide="more">{{ item.desc }}</p>
+            <p ng-show="more">{{ item.desc + item.moreDesc}}</p>
+            <span class="pull-right">
+              <h4>
+                {{ item.price | currency: "&euro;"}}
+              </h4>
+            </span>
+            <p>
+              <button ng-hide="more" ng-click="more = !more" class="btn btn-info btn-md">More</button>
+              <button ng-show="more" ng-click="more = !more" class="btn btn-info btn-md">Less</button>
+            </p>
+          </div>
+          <div class="form-group" ng-show="editMode" style="margin-top: 20px">
+            <p><input type="textarea" ng-model="item.name" class="form-control"></p>
+            <p><input type="textarea" ng-model="item.imglink" class="form-control"></p>
+            <p><textarea ng-model="item.desc" class="form-control" rows="5"></textarea></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.20/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+   <script type="text/javascript">
+     $(".dropdown-menu li a").click(function(){
+       $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+       $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+     });
+   </script>
+  </body>
+</html>
